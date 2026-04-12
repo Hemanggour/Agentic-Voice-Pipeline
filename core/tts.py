@@ -2,9 +2,13 @@ import time
 from piper import PiperVoice
 
 
+from core.config import Config
+
+
 class TTSAgent:
-    def __init__(self, model_path="./model/en_US-lessac-medium.onnx"):
-        self.voice = PiperVoice.load(model_path)
+    def __init__(self, model_path=None):
+        path = model_path or Config.TTS["MODEL_PATH"]
+        self.voice = PiperVoice.load(path)
 
     def generate(self, text: str):
         """
@@ -89,7 +93,7 @@ class TTSAgent:
         total_time = end - start
         ttfb = (first_chunk - start) if first_chunk else 0
 
-        sample_rate = 22050
+        sample_rate = Config.AUDIO.get("SAMPLE_RATE", 22050)
         bytes_per_sample = 2
 
         audio_duration = total_bytes / (sample_rate * bytes_per_sample)

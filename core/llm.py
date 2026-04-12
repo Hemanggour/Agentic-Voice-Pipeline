@@ -2,14 +2,17 @@ import time
 from langchain_ollama import ChatOllama
 
 
+from core.config import Config
+
+
 class ChatAgent:
-    def __init__(self, model="gemma3:270m", temperature=0.6, memory_limit=10):
+    def __init__(self, model=None, temperature=None, memory_limit=None):
         self.llm = ChatOllama(
-            model=model,
-            temperature=temperature,
+            model=model or Config.LLM["MODEL"],
+            temperature=temperature if temperature is not None else Config.LLM["TEMPERATURE"],
         )
         self.history = []
-        self.memory_limit = memory_limit
+        self.memory_limit = memory_limit or Config.LLM["MEMORY_LIMIT"]
 
     def _add_to_history(self, role, content):
         self.history.append({"role": role, "content": content})

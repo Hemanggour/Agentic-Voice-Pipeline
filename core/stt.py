@@ -2,12 +2,16 @@ import time
 from faster_whisper import WhisperModel
 
 
+from core.config import Config
+
+
 class STTAgent:
-    def __init__(self, model_size="tiny", device="cpu", compute_type="int8"):
+    def __init__(self, model_size=None, device=None, compute_type=None):
         self.model = WhisperModel(
-            model_size,
-            device=device,
-            compute_type=compute_type
+            model_size or Config.STT["MODEL_SIZE"],
+            device=device or Config.STT["DEVICE"],
+            compute_type=compute_type or Config.STT["COMPUTE_TYPE"],
+            download_root=Config.STT["CACHE_DIR"]
         )
 
     def generate(self, audio_path: str):

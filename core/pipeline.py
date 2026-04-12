@@ -18,18 +18,20 @@ class Colors:
     BOLD = "\033[1m"
     END = "\033[0m"
 
+from core.config import Config
+
 class VoicePipeline:
-    def __init__(self, input_mode="text", output_mode="text", debug=False):
+    def __init__(self, input_mode="text", output_mode="text", debug=None):
         self.input_mode = input_mode
         self.output_mode = output_mode
-        self.debug = debug
+        self.debug = debug if debug is not None else Config.DEBUG
         
         # Audio setup
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(
             format=pyaudio.paInt16,
-            channels=1,
-            rate=22050,
+            channels=Config.AUDIO["CHANNELS"],
+            rate=Config.AUDIO["SAMPLE_RATE"],
             output=True
         )
         self.audio_queue = queue.Queue()

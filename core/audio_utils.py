@@ -2,13 +2,16 @@ import pyaudio
 import wave
 import threading
 import sys
+from core.config import Config
 
-def record_audio(output_filename="user_audio.wav", rate=16000, chunk=1024, channels=1):
+def record_audio(output_filename="user_audio.wav", rate=None, chunk=None, channels=None):
     """
     Records audio from the microphone until the user presses Enter.
     Saves the output to a WAV file.
-    Default rate is 16000Hz as it's common for Whisper (STT).
     """
+    rate = rate or Config.AUDIO["RECORD_RATE"]
+    chunk = chunk or Config.AUDIO["CHUNK_SIZE"]
+    channels = channels or Config.AUDIO["CHANNELS"]
     p = pyaudio.PyAudio()
     
     # Try to find a working input device
