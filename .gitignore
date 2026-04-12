@@ -1,0 +1,12 @@
+.vscode
+
+venv
+.venv
+
+__pycache__
+
+.env
+
+my-docs
+model/
+*.wav
