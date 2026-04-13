@@ -53,7 +53,7 @@ To ensure a natural conversation flow, the project uses a **Sentence-Buffered St
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-repo/Agentic-Voice-Pipeline.git
+git clone https://github.com/Hemanggour/Agentic-Voice-Pipeline.git
 cd Agentic-Voice-Pipeline
 
 # Create and activate a virtual environment
