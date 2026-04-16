@@ -10,3 +10,5 @@ __pycache__
 my-docs
 models/
 *.wav
+
+*.bat

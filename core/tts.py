@@ -1,6 +1,6 @@
 import time
-from piper import PiperVoice
 
+from piper import PiperVoice
 
 from core.config import Config
 
@@ -35,17 +35,10 @@ class TTSAgent:
         end_time = time.perf_counter()
 
         metrics = self._calculate_metrics(
-            start_time,
-            end_time,
-            first_chunk_time,
-            len(full_audio),
-            chunk_count
+            start_time, end_time, first_chunk_time, len(full_audio), chunk_count
         )
 
-        return {
-            "audio": full_audio,
-            "metrics": metrics
-        }
+        return {"audio": full_audio, "metrics": metrics}
 
     def stream(self, text: str):
         """
@@ -69,25 +62,15 @@ class TTSAgent:
             total_audio_bytes += len(audio_bytes)
             chunk_count += 1
 
-            yield {
-                "type": "chunk",
-                "audio": audio_bytes
-            }
+            yield {"type": "chunk", "audio": audio_bytes}
 
         end_time = time.perf_counter()
 
         metrics = self._calculate_metrics(
-            start_time,
-            end_time,
-            first_chunk_time,
-            total_audio_bytes,
-            chunk_count
+            start_time, end_time, first_chunk_time, total_audio_bytes, chunk_count
         )
 
-        yield {
-            "type": "end",
-            "metrics": metrics
-        }
+        yield {"type": "end", "metrics": metrics}
 
     def _calculate_metrics(self, start, end, first_chunk, total_bytes, chunk_count):
         total_time = end - start
@@ -104,5 +87,5 @@ class TTSAgent:
             "ttfb": ttfb,
             "chunks": chunk_count,
             "audio_duration": audio_duration,
-            "rtf": rtf
+            "rtf": rtf,
         }

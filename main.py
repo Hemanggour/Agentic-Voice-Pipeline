@@ -1,36 +1,40 @@
 import io
 import sys
-from core.pipeline import VoicePipeline, Colors
+
 from core.config import Config
 from core.model_manager import ModelManager
+from core.pipeline import Colors, VoicePipeline
 
 # Force stdout to use UTF-8 to avoid UnicodeEncodeError on Windows
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+if sys.stdout.encoding != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
 
 def get_modes():
     """Prompt the user for input and output modes and debug preference."""
     print(f"\n{Colors.BOLD}--- AGENTIC VOICE PIPELINE SETUP ---{Colors.END}")
-    
+
     print(f"\n{Colors.YELLOW}Select Input Mode:{Colors.END}")
     print("1. Voice Input")
     print("2. Text Input")
     input_choice = input("Choice (1/2): ").strip()
     input_mode = "voice" if input_choice == "1" else "text"
-    
+
     print(f"\n{Colors.YELLOW}Select Output Mode:{Colors.END}")
     print("1. Voice Output")
     print("2. Text Output")
     output_choice = input("Choice (1/2): ").strip()
     output_mode = "voice" if output_choice == "1" else "text"
 
-    default_debug = 'y' if Config.DEBUG else 'n'
-    debug_choice = input(f"\nEnable debug mode? (y/n, default: {default_debug}): ").strip().lower()
+    default_debug = "y" if Config.DEBUG else "n"
+    debug_choice = (
+        input(f"\nEnable debug mode? (y/n, default: {default_debug}): ").strip().lower()
+    )
     if not debug_choice:
         debug = Config.DEBUG
     else:
-        debug = True if debug_choice == 'y' else False
-    
+        debug = True if debug_choice == "y" else False
+
     return input_mode, output_mode, debug
 
 
@@ -38,12 +42,14 @@ if __name__ == "__main__":
     pipeline = None
     try:
         input_mode, output_mode, debug = get_modes()
-        
+
         # Ensure models are downloaded/ready
         ModelManager.setup_all()
-        
+
         # Initialize the pipeline
-        pipeline = VoicePipeline(input_mode=input_mode, output_mode=output_mode, debug=debug)
+        pipeline = VoicePipeline(
+            input_mode=input_mode, output_mode=output_mode, debug=debug
+        )
 
         # Main Interaction Loop
         while True:

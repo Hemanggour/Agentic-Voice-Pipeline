@@ -1,6 +1,6 @@
 import time
-from faster_whisper import WhisperModel
 
+from faster_whisper import WhisperModel
 
 from core.config import Config
 
@@ -11,7 +11,7 @@ class STTAgent:
             model_size or Config.STT["MODEL_SIZE"],
             device=device or Config.STT["DEVICE"],
             compute_type=compute_type or Config.STT["COMPUTE_TYPE"],
-            download_root=Config.STT["CACHE_DIR"]
+            download_root=Config.STT["CACHE_DIR"],
         )
 
     def generate(self, audio_path: str):
@@ -29,7 +29,7 @@ class STTAgent:
             beam_size=1,
             chunk_length=5,
             vad_filter=True,
-            condition_on_previous_text=True
+            condition_on_previous_text=True,
         )
 
         first_token_time = None
@@ -63,13 +63,10 @@ class STTAgent:
             first_token_time,
             chunk_count,
             compute_blocks,
-            info.duration
+            info.duration,
         )
 
-        return {
-            "text": full_text.strip(),
-            "metrics": metrics
-        }
+        return {"text": full_text.strip(), "metrics": metrics}
 
     def stream(self, audio_path: str):
         """
@@ -85,7 +82,7 @@ class STTAgent:
             beam_size=1,
             chunk_length=5,
             vad_filter=True,
-            condition_on_previous_text=True
+            condition_on_previous_text=True,
         )
 
         first_token_time = None
@@ -111,11 +108,7 @@ class STTAgent:
 
             full_text += segment.text + " "
 
-            yield {
-                "type": "segment",
-                "text": segment.text.strip(),
-                "delta": delta
-            }
+            yield {"type": "segment", "text": segment.text.strip(), "delta": delta}
 
         end_time = time.time()
 
@@ -125,31 +118,18 @@ class STTAgent:
             first_token_time,
             chunk_count,
             compute_blocks,
-            info.duration
+            info.duration,
         )
 
-        yield {
-            "type": "end",
-            "text": full_text.strip(),
-            "metrics": metrics
-        }
+        yield {"type": "end", "text": full_text.strip(), "metrics": metrics}
 
     def _calculate_metrics(
-        self,
-        start,
-        end,
-        first_token_time,
-        chunk_count,
-        compute_blocks,
-        audio_duration
+        self, start, end, first_token_time, chunk_count, compute_blocks, audio_duration
     ):
         total_time = end - start
         rtf = total_time / audio_duration if audio_duration > 0 else 0
 
-        avg_compute = (
-            sum(compute_blocks) / len(compute_blocks)
-            if compute_blocks else 0
-        )
+        avg_compute = sum(compute_blocks) / len(compute_blocks) if compute_blocks else 0
 
         return {
             "ttft": first_token_time or 0,
@@ -157,5 +137,5 @@ class STTAgent:
             "chunks": chunk_count,
             "compute_blocks": len(compute_blocks),
             "avg_compute_block": avg_compute,
-            "rtf": rtf
+            "rtf": rtf,
         }

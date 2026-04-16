@@ -1,10 +1,11 @@
 import os
 
+
 class Config:
     # Global Settings
     DEBUG = False
     MODEL_DIR = "./models"
-    
+
     # Audio Settings
     AUDIO = {
         "SAMPLE_RATE": 22050,
@@ -12,7 +13,7 @@ class Config:
         "RECORD_RATE": 16000,
         "CHUNK_SIZE": 1024,
     }
-    
+
     # STT Settings
     STT = {
         "MODEL_SIZE": "tiny",
@@ -20,7 +21,7 @@ class Config:
         "COMPUTE_TYPE": "int8",
         "CACHE_DIR": "./models/stt",
     }
-    
+
     # LLM Settings
     LLM = {
         "MODEL": "gemma3:270m",
@@ -35,9 +36,9 @@ class Config:
         "MODEL_PATH": "./models/tts/en_US-lessac-medium.onnx",
         "CONFIG_PATH": "./models/tts/en_US-lessac-medium.onnx.json",
         "DOWNLOAD_URLS": {
-            "model": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx",
-            "config": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json"
-        }
+            "model": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx",  # noqa
+            "config": "https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/lessac/medium/en_US-lessac-medium.onnx.json",  # noqa
+        },
     }
 
     @classmethod
