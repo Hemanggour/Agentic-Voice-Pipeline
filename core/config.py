@@ -26,6 +26,7 @@ class Config:
         "MODEL": "gemma3:270m",
         "TEMPERATURE": 0.6,
         "MEMORY_LIMIT": 10,
+        "CHUNK_TOKEN_THRESHOLD": 20,
     }
 
     # TTS Settings

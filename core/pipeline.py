@@ -117,17 +117,27 @@ class VoicePipeline:
         
         # Stream LLM tokens
         llm_metrics = None
+        token_counter = 0
         for llm_chunk in self.llm.stream(user_text):
             if llm_chunk['type'] == 'token':
                 if not first_token_received:
                     first_token_received = True
                 
                 token = llm_chunk['text']
+                token_counter += 1
                 print(token, end="", flush=True)
                 
                 if self.output_mode == "voice":
                     sentence_buffer += token
-                    if self._is_sentence_end(token):
+                    
+                    # Check for punctuation OR token threshold
+                    trigger_punct = self._is_sentence_end(token)
+                    trigger_limit = token_counter >= Config.LLM["CHUNK_TOKEN_THRESHOLD"]
+                    
+                    if trigger_punct or trigger_limit:
+                        reason = "PUNCTUATION" if trigger_punct else "THRESHOLD"
+                        self._debug_print(f"\n{Colors.YELLOW}[PIPELINE] Chunking trigger: {reason} ({token_counter} tokens){Colors.END}")
+                        
                         sentence = sentence_buffer.strip()
                         if sentence:
                             if not first_tts_started:
@@ -140,7 +150,9 @@ class VoicePipeline:
                                     tts_total_time += tts_chunk['metrics']['total_time']
                                     if tts_ttfb_initial == 0:
                                         tts_ttfb_initial = tts_chunk['metrics']['ttfb']
+                            
                             sentence_buffer = ""
+                            token_counter = 0
 
             elif llm_chunk['type'] == 'end':
                 if self.output_mode == "voice":
